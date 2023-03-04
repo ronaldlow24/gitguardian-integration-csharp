@@ -16,7 +16,27 @@ namespace gitguardian_integration
 
         public static bool IsFileTextBased(IFormFile file)
         {
-            return file.ContentType.Contains("text");
+            if(file.ContentType.Contains("text"))
+                return true;
+
+            //check if it is binary, if is binary, it is not text based
+            const int charsToCheck = 8000;
+            const char nulChar = '\0';
+
+            using var streamReader = new StreamReader(file.OpenReadStream());
+
+            for (var i = 0; i < charsToCheck; i++)
+            {
+                if (streamReader.EndOfStream)
+                    return true;
+
+                if ((char)streamReader.Read() == nulChar)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static async Task<string> ReadFileAsStringAsync(IFormFile file)

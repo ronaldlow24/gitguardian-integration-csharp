@@ -62,6 +62,7 @@
           <div class="mb-3 text-end">
             <button class="btn btn-primary"
                     type="submit"
+                    id="submitButton"
                     onclick="submitForm(event)">
                 Submit
             </button>
@@ -71,10 +72,10 @@
 
     <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color:red">Warning</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -82,7 +83,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
       </div>
     </div>
   </div>
@@ -101,16 +101,14 @@
           const formData = new FormData();
 
             if (!$('#file').is(":disabled")){
-                formData.append("file", fileInput[0].files[0]);
+                formData.append("file", $('#file')[0].files[0]);
             }
 
             if (!$('#textarea').is(":disabled")) {
                 formData.append("text", $('#textarea').val());
             }
 
-          // disable form inputs
-        $("#my-form :input").prop("disabled", true);
-        $("#my-form textarea").prop("disabled", true);
+            $("#submitButton").prop("disabled", true);
 
             // make AJAX request to server
           $.ajax({
@@ -156,10 +154,10 @@
                 myModal.show()
             },
             error: function (error) {
-                toastr.error("Error submitting form.", "Error");
+                toastr.error(error.responseJSON.message, "Error");
             },
             complete: function () {
-                $('input[name="input-type"]').change()
+                $("#submitButton").prop("disabled", false);
             },
         });
     }

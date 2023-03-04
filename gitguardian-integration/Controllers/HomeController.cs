@@ -63,7 +63,7 @@ namespace gitguardian_integration.Controllers
         [HttpPost]
         public async Task<ActionResult> Check([FromForm] IFormCollection idobj)
         {
-            if (idobj is null || idobj.Count == 0)
+            if (idobj is null || (idobj.Count == 0 && !idobj.Files.Any())) 
             {
                 return BadRequest(new { status = "error", message = "No data found" });
             }
@@ -81,6 +81,12 @@ namespace gitguardian_integration.Controllers
             if (isStringBased)
             {
                 queryString = idobj.First().Value;
+
+                if (string.IsNullOrWhiteSpace(queryString))
+                {
+                    return BadRequest(new { status = "error", message = "Text is empty" });
+                }
+
             }
 
             if (isFileBased)

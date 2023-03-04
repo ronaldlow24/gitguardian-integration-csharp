@@ -1,14 +1,5 @@
 namespace gitguardian_integration.Models
 {
-    public enum GitGuardianValidity
-    {
-        no_checker,
-        valid,
-        invalid,
-        failed_to_check,
-        unknown,
-    }
-
 
     public class GitGuardianResponseModel
     {
@@ -21,7 +12,6 @@ namespace gitguardian_integration.Models
     {
         public string type { get; set; }
         public string policy { get; set; }
-        public GitGuardianValidity? validity { get; set; }
         public List<GitGuardianMatchModel> matches { get; set; }
 
     }
