@@ -1,8 +1,141 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Bootstrap 5 Form</title>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!-- jQuery -->
+
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+            form label {
+                font-weight: bold;
+            }
+
+            form textarea {
+                resize: none;
+            }
+    </style>
+</head>
+<body>
+    <form id="my-form">
+        <div class="mb-3">
+            <label class="form-label">Upload or Type:</label>
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="radio"
+                       name="input-type"
+                       value="upload"
+                       checked />
+                <label class="form-check-label">Upload File</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="radio"
+                       name="input-type"
+                       value="type" />
+                <label class="form-check-label">Type in Textarea</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">File:</label>
+            <input class="form-control"
+                   type="file"
+                   name="file"
+                   id="file"
+                    />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Textarea:</label>
+            <textarea id="textarea" class="form-control" name="textarea" rows="5" disabled></textarea>
+        </div>
+          <div class="mb-3 text-end">
+            <button class="btn btn-primary"
+                    type="submit"
+                    onclick="submitForm(event)">
+                Submit
+            </button>
+        </div>
+       
+    </form>
+
+      <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+
+    <script>
+        function submitForm(event) {
+          event.preventDefault();
+
+          const formData = new FormData();
+
+            if (!$('#file').is(":disabled")){
+                formData.append("file", fileInput[0].files[0]);
+            }
+
+            if (!$('#textarea').is(":disabled")) {
+                formData.append("text", $('#textarea').val());
+            }
+
+          // disable form inputs
+        $("#my-form :input").prop("disabled", true);
+        $("#my-form textarea").prop("disabled", true);
+
+            // make AJAX request to server
+          $.ajax({
+            type: "POST",
+            url: "@Url.Action("Check", "Home")",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert(response);
+            },
+            error: function (error) {
+                alert("Error submitting form.");
+            },
+            complete: function () {
+                $('input[name="input-type"]').change()
+            },
+        });
+    }
+
+    $(document).ready(function () {
+        $('input[name="input-type"]').on("change", function () {
+            const inputType = $(this).val();
+            const fileInput = $('input[name="file"]');
+            const textarea = $('textarea[name="textarea"]');
+
+            if (inputType === "upload") {
+                fileInput.prop("disabled", false);
+                textarea.prop("disabled", true);
+            } else if (inputType === "type") {
+                fileInput.prop("disabled", true);
+                textarea.prop("disabled", false);
+            }
+        });
+    });
+</script>
+
+  
+
+</body>
+</html>

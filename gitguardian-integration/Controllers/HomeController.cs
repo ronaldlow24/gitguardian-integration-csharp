@@ -27,28 +27,7 @@ namespace gitguardian_integration.Controllers
             return View();
         }
 
-        private static bool IsFileOverSize (IFormFile file, int maxFileSizeInBytes = 1000000) // 1MB
-        {
-            return file.Length > maxFileSizeInBytes;
-        }
-
-        private static bool IsFileTextBased (IFormFile file)
-        {
-            return file.ContentType.Contains("text");
-        }
-
-        private static async Task<string> ReadFileAsStringAsync(IFormFile file)
-        {
-            var result = new StringBuilder();
-            using (var reader = new StreamReader(file.OpenReadStream()))
-            {
-                while (reader.Peek() >= 0)
-                    result.AppendLine(await reader.ReadLineAsync());
-            }
-            return result.ToString();
-        }
-
-        private async Task<GitGuardianResponseModel?> CheckSecretAsync(string text)
+        public async Task<GitGuardianResponseModel?> CheckSecretAsync(string text)
         {
             try
             {
@@ -81,6 +60,7 @@ namespace gitguardian_integration.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<ActionResult> Check([FromForm] IFormCollection idobj)
         {
@@ -107,17 +87,17 @@ namespace gitguardian_integration.Controllers
             if (isFileBased)
             {
                 var file = idobj.Files.First();
-                if (IsFileOverSize(file))
+                if (Helper.IsFileOverSize(file))
                 {
                     return BadRequest(new { status = "error", message = "File cannot exceed 1 MB" });
                 }
 
-                if (!IsFileTextBased(file))
+                if (!Helper.IsFileTextBased(file))
                 {
                     return BadRequest(new { status = "error", message = "File must be text based" });
                 }
 
-                queryString = await ReadFileAsStringAsync(file);
+                queryString = await Helper.ReadFileAsStringAsync(file);
             }
 
             var checkResult = await CheckSecretAsync(queryString!);
