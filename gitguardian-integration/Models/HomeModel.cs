@@ -13,7 +13,7 @@ namespace gitguardian_integration.Models
     public class GitGuardianResponseModel
     {
         public int policy_break_count { get; set; }
-        public string policies { get; set; }
+        public List<string> policies { get; set; }
         public List<GitGuardianPolicyDetailsModel> policy_breaks { get; set; }
     }
 

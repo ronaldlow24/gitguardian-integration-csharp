@@ -39,11 +39,8 @@ namespace gitguardian_integration.Controllers
                     RequestUri = new Uri("https://api.gitguardian.com/v1/scan"),
                     Headers = {
                         { HttpRequestHeader.Authorization.ToString(), $"Token {_iConfiguration.GetValue<string>("GitGuardianAccessToken")}" },
-                        { HttpRequestHeader.Accept.ToString(), "application/json" },
-                        { HttpRequestHeader.ContentType.ToString(), "application/json" },
-                        { "X-Version", "1" }
                     },
-                    Content = new StringContent(JsonSerializer.Serialize(payload))
+                    Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json")
                 };
 
                 var response = await _httpClient.SendAsync(httpRequestMessage);
@@ -51,7 +48,9 @@ namespace gitguardian_integration.Controllers
                 if (!response.IsSuccessStatusCode)
                     return null;
 
-                return await response.Content.ReadFromJsonAsync<GitGuardianResponseModel?>();
+                var result = await response.Content.ReadAsStringAsync();
+
+                return JsonSerializer.Deserialize<GitGuardianResponseModel>(result);
 
             }
             catch
