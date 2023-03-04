@@ -5,9 +5,8 @@ using Xunit;
 
 namespace testing
 {
-    public class UnitTest1
+    public class HelperTest
     {
-        //create 2 unit test for IsFileOverSize
         [Fact]
         public void IsFileOverSize_WhenFileIsNotOverSize_ReturnFalse()
         {
@@ -51,7 +50,6 @@ namespace testing
             Assert.True(result);
         }
 
-        //create 2 unit test for IsFileTextBased
         [Fact]
         public void IsFileTextBased_WhenFileIsTextBased_ReturnTrue()
         {

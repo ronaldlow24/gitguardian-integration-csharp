@@ -11,13 +11,11 @@ namespace gitguardian_integration.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _iConfiguration;
 
-        public HomeController(ILogger<HomeController> logger, HttpClient httpClient, IConfiguration iconfiguration)
+        public HomeController(HttpClient httpClient, IConfiguration iconfiguration)
         {
-            _logger = logger;
             _httpClient = httpClient;
             _iConfiguration = iconfiguration;
         }
