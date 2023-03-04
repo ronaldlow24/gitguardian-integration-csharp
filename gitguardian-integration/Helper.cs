@@ -16,9 +16,6 @@ namespace gitguardian_integration
 
         public static bool IsFileTextBased(IFormFile file)
         {
-            if(file.ContentType.Contains("text"))
-                return true;
-
             //check if it is binary, if is binary, it is not text based
             const int charsToCheck = 8000;
             const char nulChar = '\0';
@@ -41,13 +38,8 @@ namespace gitguardian_integration
 
         public static async Task<string> ReadFileAsStringAsync(IFormFile file)
         {
-            var result = new StringBuilder();
-            using (var reader = new StreamReader(file.OpenReadStream()))
-            {
-                while (reader.Peek() >= 0)
-                    result.AppendLine(await reader.ReadLineAsync());
-            }
-            return result.ToString();
+            using var reader = new StreamReader(file.OpenReadStream());
+            return await reader.ReadToEndAsync();
         }
 
     }
